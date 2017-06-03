@@ -9,11 +9,11 @@ php:
 before_script:
 - |
   if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]] || [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then
-        sudo wget https://phar.phpunit.de/phpunit-5.7.phar -O /usr/local/bin/phpunit && sudo chmod +x /usr/local/bin/phpunit
+        wget https://phar.phpunit.de/phpunit-5.7.phar -O /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
   else
-        sudo wget https://phar.phpunit.de/phpunit-4.8.phar -O /usr/local/bin/phpunit && sudo chmod +x /usr/local/bin/phpunit
+        wget https://phar.phpunit.de/phpunit-4.8.phar -O /usr/local/bin/phpunit && chmod +x /usr/local/bin/phpunit
   fi
-  sudo wget "https://github.com/codeclimate/php-test-reporter/releases/download/$TEST_REPORTER_RELEASE/codeclimate-test-reporter.phar" -O /usr/local/bin/test-reporter && sudo chmod +x /usr/local/bin/test-reporter
+  wget "https://github.com/codeclimate/php-test-reporter/releases/download/$TEST_REPORTER_RELEASE/codeclimate-test-reporter.phar" -O /usr/local/bin/test-reporter && chmod +x /usr/local/bin/test-reporter
 
 script: phpunit --coverage-clover clover.xml
 
