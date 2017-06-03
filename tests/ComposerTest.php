@@ -47,7 +47,6 @@ class ComposerTest extends \PHPUnit_Framework_TestCase
         $composer->setInstallTarget(__DIR__);
         $composer->download();
         $this->assertTrue($composer->install());
-        $composer->cleanup();
     }
 
     public function testInstallTwice()
@@ -58,24 +57,39 @@ class ComposerTest extends \PHPUnit_Framework_TestCase
         $composer->download();
         $this->assertTrue($composer->install());
         $this->assertTrue($composer->install());
-        $composer->cleanup();
     }
 
-    protected function tearDown()
+    protected function setUp()
     {
-        parent::tearDown();
-        @unlink(__DIR__ . '/composer.phar');
-        @unlink(__DIR__ . '/composer.phar.sig');
+        parent::setUp();
+        self::cleanUp();
+    }
+
+
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        self::cleanUp();
+    }
+
+    protected static function cleanUp()
+    {
+        if (file_exists(__DIR__ . '/composer.phar')) {
+            @unlink(__DIR__ . '/composer.phar');
+        }
+        if (file_exists(__DIR__ . '/composer.phar.sig')) {
+            @unlink(__DIR__ . '/composer.phar.sig');
+        }
         if (is_dir(__DIR__ . '/vendor')) {
-            $this->deleteDir(__DIR__ . '/vendor');
+            self::deleteDir(__DIR__ . '/vendor');
         }
     }
 
-    protected function deleteDir($dir)
+    protected static function deleteDir($dir)
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->deleteDir("$dir/$file") : unlink("$dir/$file");
+            (is_dir("$dir/$file")) ? self::deleteDir("$dir/$file") : unlink("$dir/$file");
         }
         return rmdir($dir);
     }
