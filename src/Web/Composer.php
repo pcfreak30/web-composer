@@ -194,6 +194,9 @@ class Composer
      */
     public function cleanup()
     {
-        return unlink($this->download_target);
+        if (file_exists($this->download_target)) {
+            return unlink($this->download_target);
+        }
+        return true;
     }
 }
