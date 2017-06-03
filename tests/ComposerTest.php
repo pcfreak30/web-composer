@@ -47,7 +47,6 @@ class ComposerTest extends \PHPUnit_Framework_TestCase
         $composer->setInstallTarget(__DIR__);
         $composer->download();
         $this->assertTrue($composer->install());
-        $composer->cleanup();
     }
 
     public function testInstallTwice()
@@ -58,7 +57,6 @@ class ComposerTest extends \PHPUnit_Framework_TestCase
         $composer->download();
         $this->assertTrue($composer->install());
         $this->assertTrue($composer->install());
-        $composer->cleanup();
     }
 
     protected function tearDown()
