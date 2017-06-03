@@ -1,0 +1,16 @@
+language: php
+php:
+- '7.1'
+- '7.0'
+- '5.6'
+- '5.5'
+- '5.4'
+
+before_script:
+- composer global require "phpunit/phpunit=5.6.*"
+- composer global require "codeclimate/php-test-reporter"
+
+script: phpunit --coverage-clover clover.xml
+
+after_success:
+- test-reporter -coverage-report=clover.xml
