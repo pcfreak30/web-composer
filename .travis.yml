@@ -14,7 +14,9 @@ before_script:
         sudo wget https://phar.phpunit.de/phpunit-4.8.phar -O /usr/local/bin/phpunit && sudo chmod +x /usr/local/bin/phpunit
   fi
   composer global require codeclimate/php-test-reporter --dev
-script: phpunit --coverage-clover clover.xml
+script:
+- phpunit --coverage-clover clover.xml
+- bash debug.sh
 
 after_success:
 - test-reporter -coverage-report=clover.xml
