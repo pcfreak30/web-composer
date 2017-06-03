@@ -280,7 +280,7 @@ class Request
             $url .= urldecode(http_build_query(self::buildHTTPCurlQuery($body)));
         }
 
-        $curl_base_options = [
+        $curl_base_options = array(
             CURLOPT_URL => self::encodeUrl($url),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
@@ -292,7 +292,7 @@ class Request
             CURLOPT_SSL_VERIFYHOST => self::$verifyHost === false ? 0 : 2,
             // If an empty string, '', is set, a header containing all supported encoding types is sent
             CURLOPT_ENCODING => ''
-        ];
+        );
 
         curl_setopt_array(self::$handle, self::mergeCurlOptions($curl_base_options, self::$curlOpts));
 
