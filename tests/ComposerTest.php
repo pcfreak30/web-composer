@@ -87,7 +87,7 @@ class ComposerTest extends \PHPUnit_Framework_TestCase
 
     protected static function deleteDir($dir)
     {
-        $files = array_diff(scandir($dir), ['.', '..']);
+        $files = array_diff(scandir($dir), array('.', '..'));
         foreach ($files as $file) {
             (is_dir("$dir/$file")) ? self::deleteDir("$dir/$file") : unlink("$dir/$file");
         }
