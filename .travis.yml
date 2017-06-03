@@ -9,12 +9,13 @@ php:
 before_script:
 - |
   if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.0" ]] || [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then
-        composer global require "phpunit/phpunit=5.6.*"
+        composer require "phpunit/phpunit=5.6.*"
   else
-        composer global require "phpunit/phpunit=4.8.*"
+        composer require "phpunit/phpunit=4.8.*"
   fi
+  composer require codeclimate/php-test-reporter
 
-script: phpunit --coverage-clover clover.xml
+script: ./vendor/bin/phpunit --coverage-clover clover.xml
 
 after_success:
-- test-reporter -coverage-report=clover.xml
+- ./vendor/bin/test-reporter -coverage-report=clover.xml
