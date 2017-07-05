@@ -3,6 +3,7 @@
 namespace pcfreak30\Web;
 
 use Composer\Console;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Unirest\Exception;
 use Unirest\Request;
 
@@ -147,10 +148,16 @@ class Composer
         $orig_memory_limit = trim(ini_get('memory_limit'));
         $this->increaseMemory();
         putenv('COMPOSER_NO_INTERACTION=1');
-        $app = new Console\Application();
+        putenv('COMPOSER_HOME=' . dirname($this->download_target) . '/.composer');
+        $output = new BufferedOutput();
+        $app = new Console\Application(null, $output);
         $app->setAutoExit(false);
         $result = $app->run();
         @ini_set('memory_limit', $orig_memory_limit);
+        $output_message = $output->fetch();
+        if (!empty($output_message)) {
+            throw new \Exception($output_message);
+        }
         $result = 0 == $result;
         return $result;
     }
