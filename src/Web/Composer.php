@@ -130,7 +130,7 @@ class Composer
      */
     public function install()
     {
-        $_SERVER['argv'] = array('composer', '-q', '--working-dir=' . $this->install_target, 'install');
+        $_SERVER['argv'] = array('composer', '-q', '--working-dir=' . $this->install_target, '--no-dev', 'install');
         $_SERVER['argc'] = count($_SERVER['argv']);
 
         if (!file_exists($this->install_target . '/composer.json')) {
