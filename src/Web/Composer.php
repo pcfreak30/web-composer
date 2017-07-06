@@ -209,6 +209,27 @@ class Composer
         if (file_exists($this->download_target)) {
             return unlink($this->download_target);
         }
+        $home = getenv('COMPOSER_HOME');
+        if (!empty($home)) {
+            $this->rmdir($home);
+        }
         return true;
+    }
+
+    private function rmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($dir . "/" . $object)) {
+                        $this->rmdir($dir . "/" . $object);
+                    } else {
+                        unlink($dir . "/" . $object);
+                    }
+                }
+            }
+            rmdir($dir);
+        }
     }
 }
