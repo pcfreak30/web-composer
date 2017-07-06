@@ -3,6 +3,7 @@
 namespace pcfreak30\Web;
 
 use Composer\Console;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Unirest\Exception;
 use Unirest\Request;
@@ -131,9 +132,6 @@ class Composer
      */
     public function install()
     {
-        $_SERVER['argv'] = array('composer', '-q', '--working-dir=' . $this->install_target, '--no-dev', 'install');
-        $_SERVER['argc'] = count($_SERVER['argv']);
-
         if (!file_exists($this->install_target . '/composer.json')) {
             return false;
         }
@@ -150,13 +148,20 @@ class Composer
         putenv('COMPOSER_NO_INTERACTION=1');
         putenv('COMPOSER_HOME=' . dirname($this->download_target) . '/.composer');
         $output = new BufferedOutput();
-        $app = new Console\Application(null, $output);
+        $input = new ArrayInput(array(
+            'install',
+            '--prefer-dist' => true,
+            '--no-dev' => true,
+            '--working-dir' => $this->install_target,
+        ));
+        $app = new Console\Application();
         $app->setAutoExit(false);
-        $result = $app->run();
+        $result = $app->run($input, $output);
         @ini_set('memory_limit', $orig_memory_limit);
         $output_message = $output->fetch();
-        if (!empty($output_message)) {
-            throw new \Exception($output_message);
+        if (!empty($result)) {
+            echo $output_message;
+            $result = 1;
         }
         $result = 0 == $result;
         return $result;
