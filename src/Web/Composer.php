@@ -140,6 +140,7 @@ class Composer
         if (!file_exists($this->install_target . '/composer.json')) {
             return false;
         }
+        $result = false;
         if (!class_exists('\Composer\Console\Application')) {
             if (extension_loaded('suhosin') && false == strpos(ini_get('suhosin.executor.include.whitelist'), 'phar')) {
                 $result = $this->loadSource();
