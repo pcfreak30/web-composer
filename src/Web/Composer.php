@@ -29,6 +29,11 @@ class Composer
     protected $install_target;
 
     /**
+     * @var string
+     */
+    protected $source_target;
+
+    /**
      * @return string
      */
     public function getDownloadTarget()
@@ -136,12 +141,14 @@ class Composer
             return false;
         }
         if (!class_exists('\Composer\Console\Application')) {
-            try {
-                \Phar::loadPhar($this->download_target);
-                require_once 'phar://composer.phar/src/bootstrap.php';
-            } catch (\Exception $e) {
-                return false;
+            if (extension_loaded('suhosin') && false == strpos(ini_get('suhosin.executor.include.whitelist'), 'phar')) {
+                $result = $this->loadSource();
+            } else {
+                $result = $this->loadPhar();
             }
+        }
+        if (!$result) {
+            return $result;
         }
         $orig_memory_limit = trim(ini_get('memory_limit'));
         $this->increaseMemory();
@@ -165,6 +172,31 @@ class Composer
         }
         $result = 0 == $result;
         return $result;
+    }
+
+    protected function loadPhar()
+    {
+        try {
+            \Phar::loadPhar($this->download_target);
+            require_once 'phar://composer.phar/src/bootstrap.php';
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function loadSource()
+    {
+        $this->source_target = dirname($this->download_target) . '/composer';
+        @mkdir($this->source_target);
+        try {
+            $phar = new \Phar($this->download_target);
+            $phar->extractTo($this->source_target);
+            require_once $this->source_target . '/src/bootstrap.php';
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -212,6 +244,9 @@ class Composer
         $home = getenv('COMPOSER_HOME');
         if (!empty($home)) {
             $this->rmdir($home);
+        }
+        if (!empty($this->source_target) && is_dir($this->source_target)) {
+            $this->rmdir($this->source_target);
         }
         return true;
     }
