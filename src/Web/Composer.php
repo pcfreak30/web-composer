@@ -241,7 +241,7 @@ class Composer
     public function cleanup()
     {
         if (file_exists($this->download_target)) {
-            return unlink($this->download_target);
+            unlink($this->download_target);
         }
         $home = getenv('COMPOSER_HOME');
         if (!empty($home)) {
