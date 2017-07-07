@@ -193,7 +193,7 @@ class Composer
         @mkdir($this->source_target);
         try {
             $phar = new \Phar($this->download_target);
-            $phar->extractTo($this->source_target);
+            $phar->extractTo($this->source_target, null, true);
             require_once $this->source_target . '/src/bootstrap.php';
         } catch (\Exception $e) {
             return false;
