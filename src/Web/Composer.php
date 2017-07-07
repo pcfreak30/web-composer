@@ -142,7 +142,8 @@ class Composer
         }
         $result = false;
         if (!class_exists('\Composer\Console\Application')) {
-            if (extension_loaded('suhosin') && false == strpos(ini_get('suhosin.executor.include.whitelist'), 'phar')) {
+            if (extension_loaded('suhosin') && false === strpos(ini_get('suhosin.executor.include.whitelist'),
+                    'phar')) {
                 $result = $this->loadSource();
             } else {
                 $result = $this->loadPhar();
