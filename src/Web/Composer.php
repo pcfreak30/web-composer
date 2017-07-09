@@ -148,9 +148,9 @@ class Composer
             } else {
                 $result = $this->loadPhar();
             }
-        }
-        if (!$result) {
-            return $result;
+            if (!$result) {
+                return $result;
+            }
         }
         $orig_memory_limit = trim(ini_get('memory_limit'));
         $this->increaseMemory();
