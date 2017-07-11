@@ -73,6 +73,9 @@ class Composer
         if (!$this->download()) {
             return false;
         }
+
+        $this->preCleanup();
+
         if (!$this->install()) {
             return $this->cleanup();
         }
@@ -268,5 +271,10 @@ class Composer
             }
             rmdir($dir);
         }
+    }
+
+    private function preCleanup()
+    {
+        $this->rmdir($this->install_target . '/vendor');
     }
 }
